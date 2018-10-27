@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Grzegorz Żarnowiecki - simple blog</title>
-    <link>http://example.org/</link>
+    <link>https://grzegorz-zarnowiecki.github.io/</link>
     <description>Recent content on Grzegorz Żarnowiecki - simple blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 27 Oct 2018 18:28:21 +0200</lastBuildDate>
     
-	<atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://grzegorz-zarnowiecki.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Spring Boot V2 and Multiple Datasorces</title>
-      <link>http://example.org/post/spring-boot-v2-and-multiple-datasorces/</link>
+      <link>https://grzegorz-zarnowiecki.github.io/post/spring-boot-v2-and-multiple-datasorces/</link>
       <pubDate>Sat, 27 Oct 2018 18:28:21 +0200</pubDate>
       
-      <guid>http://example.org/post/spring-boot-v2-and-multiple-datasorces/</guid>
+      <guid>https://grzegorz-zarnowiecki.github.io/post/spring-boot-v2-and-multiple-datasorces/</guid>
       <description>&lt;p&gt;Hello&lt;/p&gt;
 
 &lt;p&gt;Finally i just read documentation and somme blogs, after merging proces I wrtite this code&amp;hellip;:
