@@ -6,9 +6,28 @@
     <description>Recent content in Tags on Grzegorz Żarnowiecki - simple blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Sat, 27 Oct 2018 18:28:21 +0200</lastBuildDate>
     
 	<atom:link href="https://grzegorz-zarnowiecki.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Java</title>
+      <link>https://grzegorz-zarnowiecki.github.io/tags/java/</link>
+      <pubDate>Sat, 27 Oct 2018 18:28:21 +0200</pubDate>
+      
+      <guid>https://grzegorz-zarnowiecki.github.io/tags/java/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring</title>
+      <link>https://grzegorz-zarnowiecki.github.io/tags/spring/</link>
+      <pubDate>Sat, 27 Oct 2018 18:28:21 +0200</pubDate>
+      
+      <guid>https://grzegorz-zarnowiecki.github.io/tags/spring/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>
