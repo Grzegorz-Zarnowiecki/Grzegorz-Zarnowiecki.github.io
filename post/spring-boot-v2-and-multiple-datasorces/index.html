@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="Grzegorz Żarnowiecki" />
+<meta name="description" content="Personal blog." />
+<meta name="keywords" content="blog, tech" />
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="generator" content="Hugo 0.49" />
+
+<link rel="canonical" href="http://example.org/post/spring-boot-v2-and-multiple-datasorces/">
+<meta property="og:title" content="Spring Boot V2 and Multiple Datasorces" />
+<meta property="og:description" content="Hello
+
+Finally i just read documentation and somme blogs, after merging proces I wrtite this code&hellip;:
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/post/spring-boot-v2-and-multiple-datasorces/" /><meta property="article:published_time" content="2018-10-27T18:28:21&#43;02:00"/>
+<meta property="article:modified_time" content="2018-10-27T18:28:21&#43;02:00"/>
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Boot V2 and Multiple Datasorces"/>
+<meta name="twitter:description" content="Hello
+
+Finally i just read documentation and somme blogs, after merging proces I wrtite this code&hellip;:
+"/>
+
+
+
+<meta itemprop="name" content="Spring Boot V2 and Multiple Datasorces">
+<meta itemprop="description" content="Hello
+
+Finally i just read documentation and somme blogs, after merging proces I wrtite this code&hellip;:
+">
+
+
+<meta itemprop="datePublished" content="2018-10-27T18:28:21&#43;02:00" />
+<meta itemprop="dateModified" content="2018-10-27T18:28:21&#43;02:00" />
+<meta itemprop="wordCount" content="146">
+
+
+
+<meta itemprop="keywords" content="" />
+
+
+<link rel="stylesheet" href="http://example.org/css/layout.css" />
+<style type="text/css">
+body {
+  background-color: #101010;
+  color: #dbdbdb;
+}
+
+a { color: #dbdbdb; }
+
+pre {
+  background: #1D1F21;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+}
+
+code {
+  background: #1D1F21;
+}
+
+blockquote {
+  background: #1D1F21;
+  border-left: 3px solid #dbdbdb;
+}
+
+table {
+  margin: 1em auto;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #dbdbdb;
+}
+
+th {
+  background: #dbdbdb;
+  color: #101010;
+}
+
+.siteTitle a { color: #99cc66; }
+
+.post .content h1{ color: #99cc66; }
+.post .content h2{ color: #99cc66; }
+.post .content h3{ color: #99cc66; }
+.post .content h4{ color: #99cc66; }
+.post .content h5{ color: #99cc66; }
+.post .content h6{ color: #99cc66; }
+.post .content a:hover { color: #99cc66; }
+.social-link:hover { color: #99cc66; }
+.nav-item-title:hover { color: #99cc66; }
+.tag a:hover { color: #99cc66; }
+.copyright { color: #404040 }
+.poweredby { color: #404040 }
+.poweredby a { color: #404040; }
+.post-preview .title a{ color: #99cc66; }
+.content-item a:hover{
+  text-decoration: underline;
+  color: #99cc66;
+}
+.post-list .title { color: #99cc66; }
+.rmore { color: #99cc66; }
+.terms .term a:hover {
+  text-decoration: underline;
+  color: #99cc66;
+}
+
+</style>
+
+
+
+<title>
+
+
+     Spring Boot V2 and Multiple Datasorces 
+
+</title>
+
+</head>
+
+
+<body>
+<div class="main">
+<header>
+
+<div class="header-bar">
+
+  <nav>
+    <div class="siteTitle">
+      <a href="http://example.org/">Grzegorz Żarnowiecki - simple blog</a>
+    </div> 
+
+    
+    
+    <a class="nav-item active" href="http://example.org/post/"><div class="nav-item-title">Posts</div></a>
+    
+
+  </nav>
+</div>
+
+  
+<div class="social-links-header">
+
+  
+  <a href="mailto:g.zarnowiecki%28at%29gmail.com"><div class="social-link">email</div></a>
+  
+
+  
+  <a href="https://github.com/Grzegorz-Zarnowiecki" target="_blank"><div class="social-link">gh</div></a>
+  
+
+  
+
+  
+
+  
+  <a href="https://www.linkedin.com/in/grzegorz-zarnowiecki-b1809740" target="_blank"><div class="social-link">in</div></a>
+  
+
+</div>
+
+
+</header>
+
+
+<article class="post">
+    <h1 class="title"> Spring Boot V2 and Multiple Datasorces </h1>
+    <div class="content"> <p>Hello</p>
+
+<p>Finally i just read documentation and somme blogs, after merging proces I wrtite this code&hellip;:
+</p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#ffa500">@Configuration</span>
+<span style="color:#ffa500">@EnableTransactionManagement</span>
+<span style="color:#ffa500">@EnableJpaRepositories</span>(basePackages = <span style="color:#ed9d13">&#34;net.gzarnowiecki.multids.H2.repository&#34;</span>, entityManagerFactoryRef = <span style="color:#ed9d13">&#34;h2DSEmFactory&#34;</span>, transactionManagerRef = <span style="color:#ed9d13">&#34;h2DSTransactionManager&#34;</span>)
+
+<span style="color:#6ab825;font-weight:bold">public</span> <span style="color:#6ab825;font-weight:bold">class</span> <span style="color:#447fcf;text-decoration:underline">H2DbConfiguration</span> {
+    <span style="color:#ffa500">@Value</span>( <span style="color:#ed9d13">&#34;${h2.datasource.hibernatedialect}&#34;</span> )
+    <span style="color:#6ab825;font-weight:bold">private</span> String hibernatedialect;
+    <span style="color:#ffa500">@Value</span>( <span style="color:#ed9d13">&#34;${h2.datasource.hibernate.hbm2ddl.auto}&#34;</span> )
+    <span style="color:#6ab825;font-weight:bold">private</span> String hbm2ddl;
+
+    <span style="color:#ffa500">@Primary</span>
+    <span style="color:#ffa500">@Bean</span>
+    <span style="color:#ffa500">@ConfigurationProperties</span>(<span style="color:#ed9d13">&#34;h2.datasource&#34;</span>)
+
+    <span style="color:#6ab825;font-weight:bold">public</span> <span style="color:#ffa500">@Qualifier</span>(<span style="color:#ed9d13">&#34;h2.datasource&#34;</span>)
+    DataSourceProperties <span style="color:#447fcf">h2DSProperties</span>() {
+        DataSourceProperties ds = <span style="color:#6ab825;font-weight:bold">new</span> DataSourceProperties();
+        <span style="color:#6ab825;font-weight:bold">return</span> ds;
+    }
+
+    <span style="color:#ffa500">@Primary</span>
+    <span style="color:#ffa500">@Bean</span>
+    <span style="color:#6ab825;font-weight:bold">public</span> DataSource <span style="color:#447fcf">h2DS</span>(<span style="color:#ffa500">@Qualifier</span>(<span style="color:#ed9d13">&#34;h2DSProperties&#34;</span>) DataSourceProperties h2DSProperties) {
+        <span style="color:#6ab825;font-weight:bold">return</span> h2DSProperties.<span style="color:#bbb">initializeDataSourceBuilder</span>().<span style="color:#bbb">build</span>();
+    }
+
+    <span style="color:#ffa500">@Primary</span>
+    <span style="color:#ffa500">@Bean</span>
+    <span style="color:#6ab825;font-weight:bold">public</span> LocalContainerEntityManagerFactoryBean <span style="color:#447fcf">h2DSEmFactory</span>(<span style="color:#ffa500">@Qualifier</span>(<span style="color:#ed9d13">&#34;h2DS&#34;</span>) DataSource h2DS, EntityManagerFactoryBuilder builder) {
+        Properties properties = <span style="color:#6ab825;font-weight:bold">new</span> Properties();
+        properties.<span style="color:#bbb">setProperty</span>(<span style="color:#ed9d13">&#34;hibernate.dialect&#34;</span>, hibernatedialect);
+        properties.<span style="color:#bbb">setProperty</span>(<span style="color:#ed9d13">&#34;hibernate.hbm2ddl.auto&#34;</span>,<span style="color:#ed9d13">&#34;create&#34;</span>);
+
+        LocalContainerEntityManagerFactoryBean emf = builder.<span style="color:#bbb">dataSource</span>(h2DS).<span style="color:#bbb">packages</span>(<span style="color:#ed9d13">&#34;net.gzarnowiecki.multids.H2.domain&#34;</span>).<span style="color:#bbb">build</span>();
+        emf.<span style="color:#bbb">setJpaProperties</span>(properties);
+        emf.<span style="color:#bbb">setPersistenceUnitName</span>(<span style="color:#ed9d13">&#34;h2Presistence&#34;</span>);
+        <span style="color:#6ab825;font-weight:bold">return</span> emf;
+    }
+
+    <span style="color:#ffa500">@Primary</span>
+    <span style="color:#ffa500">@Bean</span>
+    <span style="color:#6ab825;font-weight:bold">public</span> PlatformTransactionManager <span style="color:#447fcf">h2DSTransactionManager</span>(<span style="color:#ffa500">@Qualifier</span>(<span style="color:#ed9d13">&#34;h2DSEmFactory&#34;</span>)EntityManagerFactory h2DSEmFactory) {
+        <span style="color:#6ab825;font-weight:bold">return</span> <span style="color:#6ab825;font-weight:bold">new</span> JpaTransactionManager(h2DSEmFactory);
+    }
+
+}</code></pre></div>
+<p>This i configuration for first data source. When You create another please remove @Primary annotation.</p>
+
+<p>and this  part of configuration <strong>application.yml</strong></p>
+<div class="highlight"><pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#bbb">h2:</span>
+  <span style="color:#bbb">datasource:</span>
+    <span style="color:#bbb">url: jdbc:h2:mem:mydb</span>
+    <span style="color:#bbb">username: sa</span>
+    <span style="color:#bbb">password:</span>
+    <span style="color:#bbb">driverClassName: org.h2.Driver</span>
+    <span style="color:#bbb">connection-test-query: SELECT 1</span>
+    <span style="color:#bbb">hibernatedialect: org.hibernate.dialect.H2Dialect</span>
+    <span style="color:#bbb">hibernate.hbm2ddl.auto: create-drop</span></code></pre></div> </div>
+    <footer class="post-footer">
+
+  <div class="post-footer-data">
+    
+<div class="tags">
+    
+</div>
+
+    <div class="date"> Oct 27, 2018 </div>
+  </div>
+
+</footer>
+
+
+  
+
+
+</article>
+
+  <footer>
+
+  <div class="social-links-footer">
+
+  
+  <a href="mailto:g.zarnowiecki%28at%29gmail.com"><div class="social-link">Email</div></a>
+  
+
+  
+  <a href="https://github.com/Grzegorz-Zarnowiecki" target="_blank"><div class="social-link">GitHub</div></a>
+  
+
+  
+
+  
+
+  
+  <a href="https://www.linkedin.com/in/grzegorz-zarnowiecki-b1809740" target="_blank"><div class="social-link">LinkedIn</div></a>
+  
+
+  <div class="social-link">
+  <a href="http://example.org/index.xml" target="_blank">RSS</a>
+  </div>
+
+</div>
+
+
+  <div class="copyright">  </div>
+
+  <div class="poweredby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>.
+  </div>
+
+  </footer>
+
+</div> 
+
+</body>
+</html>
+
