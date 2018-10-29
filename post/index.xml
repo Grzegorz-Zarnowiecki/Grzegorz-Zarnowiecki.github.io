@@ -17,10 +17,11 @@
       <pubDate>Sat, 27 Oct 2018 18:28:21 +0200</pubDate>
       
       <guid>https://grzegorz-zarnowiecki.github.io/post/spring-boot-v2-and-multiple-datasorces/</guid>
-      <description>&lt;p&gt;Hello&lt;/p&gt;
+      <description>&lt;p&gt;Cześć&lt;/p&gt;
 
-&lt;p&gt;Finally i just read documentation and somme blogs, after merging proces I wrtite this code&amp;hellip;:
-&lt;/p&gt;</description>
+&lt;p&gt;Tak wiem że w sieci jest 500 stron opisujących to zagadnienie ale gdy usiadłem do czytania na wielu było coś nie tak, głównie kwestie rozwoju Spring Boot i użycie nie wspieranych już metod konfiguracji. Zatem wszystko w komplecie macie tu:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>
