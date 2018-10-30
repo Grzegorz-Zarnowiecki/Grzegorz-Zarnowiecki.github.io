@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="Grzegorz Żarnowiecki" />
+<meta name="description" content="Personal blog." />
+<meta name="keywords" content="blog, tech , java" />
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="generator" content="Hugo 0.49" />
+
+<link rel="canonical" href="https://grzegorz-zarnowiecki.github.io/post/spring-boot-v2-and-multiple-datasorces/">
+<meta property="og:title" content="Spring Boot V2 i wiele źródeł danych (multiple datasources)" />
+<meta property="og:description" content="Cześć
+
+Tak wiem że w sieci jest 500 stron opisujących to zagadnienie ale gdy usiadłem do czytania na wielu było coś nie tak, głównie kwestie rozwoju Spring Boot i użycie nie wspieranych już metod konfiguracji. Zatem wszystko w komplecie macie tu:
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://grzegorz-zarnowiecki.github.io/post/spring-boot-v2-and-multiple-datasorces/" /><meta property="article:published_time" content="2018-10-27T18:28:21&#43;02:00"/>
+<meta property="article:modified_time" content="2018-10-27T18:28:21&#43;02:00"/>
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Boot V2 i wiele źródeł danych (multiple datasources)"/>
+<meta name="twitter:description" content="Cześć
+
+Tak wiem że w sieci jest 500 stron opisujących to zagadnienie ale gdy usiadłem do czytania na wielu było coś nie tak, głównie kwestie rozwoju Spring Boot i użycie nie wspieranych już metod konfiguracji. Zatem wszystko w komplecie macie tu:
+
+"/>
+
+
+
+<meta itemprop="name" content="Spring Boot V2 i wiele źródeł danych (multiple datasources)">
+<meta itemprop="description" content="Cześć
+
+Tak wiem że w sieci jest 500 stron opisujących to zagadnienie ale gdy usiadłem do czytania na wielu było coś nie tak, głównie kwestie rozwoju Spring Boot i użycie nie wspieranych już metod konfiguracji. Zatem wszystko w komplecie macie tu:
+
+">
+
+
+<meta itemprop="datePublished" content="2018-10-27T18:28:21&#43;02:00" />
+<meta itemprop="dateModified" content="2018-10-27T18:28:21&#43;02:00" />
+<meta itemprop="wordCount" content="324">
+
+
+
+<meta itemprop="keywords" content="java,spring," />
+
+
+<link rel="stylesheet" href="https://grzegorz-zarnowiecki.github.io/css/layout.css" />
+<style type="text/css">
+body {
+  background-color: #101010;
+  color: #dbdbdb;
+}
+
+a { color: #dbdbdb; }
+
+pre {
+  background: #1D1F21;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+}
+
+code {
+  background: #1D1F21;
+}
+
+blockquote {
+  background: #1D1F21;
+  border-left: 3px solid #dbdbdb;
+}
+
+table {
+  margin: 1em auto;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #dbdbdb;
+}
+
+th {
+  background: #dbdbdb;
+  color: #101010;
+}
+
+.siteTitle a { color: #99cc66; }
+
+.post .content h1{ color: #99cc66; }
+.post .content h2{ color: #99cc66; }
+.post .content h3{ color: #99cc66; }
+.post .content h4{ color: #99cc66; }
+.post .content h5{ color: #99cc66; }
+.post .content h6{ color: #99cc66; }
+.post .content a:hover { color: #99cc66; }
+.social-link:hover { color: #99cc66; }
+.nav-item-title:hover { color: #99cc66; }
+.tag a:hover { color: #99cc66; }
+.copyright { color: #404040 }
+.poweredby { color: #404040 }
+.poweredby a { color: #404040; }
+.post-preview .title a{ color: #99cc66; }
+.content-item a:hover{
+  text-decoration: underline;
+  color: #99cc66;
+}
+.post-list .title { color: #99cc66; }
+.rmore { color: #99cc66; }
+.terms .term a:hover {
+  text-decoration: underline;
+  color: #99cc66;
+}
+
+</style>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-128183679-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+<title>
+
+
+     Spring Boot V2 i wiele źródeł danych (multiple datasources) 
+
+</title>
+
+</head>
+
+
+<body>
+<div class="main">
+<header>
+
+<div class="header-bar">
+
+  <nav>
+    <div class="siteTitle">
+      <a href="https://grzegorz-zarnowiecki.github.io/">Grzegorz Żarnowiecki - simple blog</a>
+    </div> 
+
+    
+    
+    <a class="nav-item active" href="https://grzegorz-zarnowiecki.github.io/post/"><div class="nav-item-title">Posts</div></a>
+    
+    <a class="nav-item" href="https://grzegorz-zarnowiecki.github.io/tags/"><div class="nav-item-title">Tags</div></a>
+    
+
+  </nav>
+</div>
+
+  
+<div class="social-links-header">
+
+  
+  <a href="mailto:g.zarnowiecki%28at%29gmail.com"><div class="social-link">email</div></a>
+  
+
+  
+  <a href="https://github.com/Grzegorz-Zarnowiecki" target="_blank"><div class="social-link">gh</div></a>
+  
+
+  
+
+  
+
+  
+  <a href="https://www.linkedin.com/in/grzegorz-zarnowiecki-b1809740" target="_blank"><div class="social-link">in</div></a>
+  
+
+</div>
+
+
+</header>
+
+
+<article class="post">
+    <h1 class="title"> Spring Boot V2 i wiele źródeł danych (multiple datasources) </h1>
+    <div class="content"> <p>Cześć</p>
+
+<p>Tak wiem że w sieci jest 500 stron opisujących to zagadnienie ale gdy usiadłem do czytania na wielu było coś nie tak, głównie kwestie rozwoju Spring Boot i użycie nie wspieranych już metod konfiguracji. Zatem wszystko w komplecie macie tu:</p>
+
+<p></p>
+
+<p>Konfiguracja jest prosta do bólu, każde datasource ma swój pakiet dla wygody i porządku czyli</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jade" data-lang="jade">net.gzarnowiecki.multids
+			NazwaŹródła(H2)
+						Domain
+								Encje
+						Repository
+								Repozytoria
+						...
+			NazwaŹródła2(HSQLDB)
+						....</code></pre></div>
+<p>Kod pierwszego źródła</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Configuration</span>
+<span style="color:#a6e22e">@EnableTransactionManagement</span>
+<span style="color:#a6e22e">@EnableJpaRepositories</span><span style="color:#f92672">(</span>basePackages <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;net.gzarnowiecki.multids.HSQLDB.repository&#34;</span><span style="color:#f92672">,</span> entityManagerFactoryRef <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hsqldbDSEmFactory&#34;</span><span style="color:#f92672">,</span> transactionManagerRef <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hsqldbDSTransactionManager&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@PropertySource</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;classpath:application.yml&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@ConfigurationProperties</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hsqldb.datasource&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HsqlDbConfiguration</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${hsqldb.datasource.hibernate-hbm2ddl-auto}&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> String hbm2ddl<span style="color:#f92672">;</span>
+    <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${hsqldb.datasource.properties-hibernate-dialect}&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> String hibernateDialect<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@Bean</span>
+
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">@Qualifier</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hsqldb.datasource&#34;</span><span style="color:#f92672">)</span>
+    DataSourceProperties <span style="color:#a6e22e">hsqldbDSProperties</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> DataSourceProperties<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Primary</span>
+    <span style="color:#a6e22e">@Bean</span>
+    <span style="color:#66d9ef">public</span> DataSource <span style="color:#a6e22e">hsqldbDS</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Qualifier</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hsqldbDSProperties&#34;</span><span style="color:#f92672">)</span> DataSourceProperties hsqldbDSProperties<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> hsqldbDSProperties<span style="color:#f92672">.</span><span style="color:#a6e22e">initializeDataSourceBuilder</span><span style="color:#f92672">().</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Primary</span>
+    <span style="color:#a6e22e">@Bean</span>
+    <span style="color:#66d9ef">public</span> LocalContainerEntityManagerFactoryBean <span style="color:#a6e22e">hsqldbDSEmFactory</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Qualifier</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hsqldbDS&#34;</span><span style="color:#f92672">)</span> DataSource hsqldbDS<span style="color:#f92672">,</span> EntityManagerFactoryBuilder builder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Properties properties <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Properties<span style="color:#f92672">();</span>
+        properties<span style="color:#f92672">.</span><span style="color:#a6e22e">setProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hibernate.dialect&#34;</span><span style="color:#f92672">,</span> hibernateDialect<span style="color:#f92672">);</span>
+        properties<span style="color:#f92672">.</span><span style="color:#a6e22e">setProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hibernate.hbm2ddl.auto&#34;</span><span style="color:#f92672">,</span> hbm2ddl<span style="color:#f92672">);</span>
+        LocalContainerEntityManagerFactoryBean emf <span style="color:#f92672">=</span> builder<span style="color:#f92672">.</span><span style="color:#a6e22e">dataSource</span><span style="color:#f92672">(</span>hsqldbDS<span style="color:#f92672">).</span><span style="color:#a6e22e">packages</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;net.gzarnowiecki.multids.hsqldb.domain&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+        emf<span style="color:#f92672">.</span><span style="color:#a6e22e">setJpaProperties</span><span style="color:#f92672">(</span>properties<span style="color:#f92672">);</span>
+        emf<span style="color:#f92672">.</span><span style="color:#a6e22e">setPersistenceUnitName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hsqldbPersistence&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> emf<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Primary</span>
+    <span style="color:#a6e22e">@Bean</span>
+    <span style="color:#66d9ef">public</span> PlatformTransactionManager <span style="color:#a6e22e">hsqldbDSTransactionManager</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Qualifier</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hsqldbDSEmFactory&#34;</span><span style="color:#f92672">)</span> EntityManagerFactory hsqldbDSEmFactory<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> JpaTransactionManager<span style="color:#f92672">(</span>hsqldbDSEmFactory<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>i poniżej drugiego, jest analogiczny, adnotacja @Primary jest wymagana dla jednego źródła</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Configuration</span>
+<span style="color:#a6e22e">@EnableTransactionManagement</span>
+<span style="color:#a6e22e">@EnableJpaRepositories</span><span style="color:#f92672">(</span>basePackages <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;net.gzarnowiecki.multids.H2.repository&#34;</span><span style="color:#f92672">,</span> entityManagerFactoryRef <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;h2DSEmFactory&#34;</span><span style="color:#f92672">,</span> transactionManagerRef <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;h2DSTransactionManager&#34;</span><span style="color:#f92672">)</span>
+
+<span style="color:#a6e22e">@PropertySource</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;classpath:application.yml&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">H2DbConfiguration</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${h2.datasource.hibernate-hbm2ddl-auto}&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> String hbm2ddl<span style="color:#f92672">;</span>
+    <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${h2.datasource.properties-hibernate-dialect}&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">private</span> String hibernateDialect<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@ConfigurationProperties</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;h2.datasource&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#a6e22e">@Bean</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">@Qualifier</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;h2.datasource&#34;</span><span style="color:#f92672">)</span>
+    DataSourceProperties <span style="color:#a6e22e">h2DSProperties</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> DataSourceProperties<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+
+    <span style="color:#a6e22e">@Bean</span>
+    <span style="color:#66d9ef">public</span> DataSource <span style="color:#a6e22e">h2DS</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Qualifier</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;h2DSProperties&#34;</span><span style="color:#f92672">)</span> DataSourceProperties h2DSProperties<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> h2DSProperties<span style="color:#f92672">.</span><span style="color:#a6e22e">initializeDataSourceBuilder</span><span style="color:#f92672">().</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Bean</span>
+    <span style="color:#66d9ef">public</span> LocalContainerEntityManagerFactoryBean <span style="color:#a6e22e">h2DSEmFactory</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Qualifier</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;h2DS&#34;</span><span style="color:#f92672">)</span> DataSource h2DS<span style="color:#f92672">,</span> EntityManagerFactoryBuilder builder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Properties properties <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Properties<span style="color:#f92672">();</span>
+        properties<span style="color:#f92672">.</span><span style="color:#a6e22e">setProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hibernate.dialect&#34;</span><span style="color:#f92672">,</span> hibernateDialect<span style="color:#f92672">);</span>
+        properties<span style="color:#f92672">.</span><span style="color:#a6e22e">setProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hibernate.hbm2ddl.auto&#34;</span><span style="color:#f92672">,</span> hbm2ddl<span style="color:#f92672">);</span>
+        LocalContainerEntityManagerFactoryBean emf <span style="color:#f92672">=</span> builder<span style="color:#f92672">.</span><span style="color:#a6e22e">dataSource</span><span style="color:#f92672">(</span>h2DS<span style="color:#f92672">).</span><span style="color:#a6e22e">packages</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;net.gzarnowiecki.multids.H2.domain&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+        emf<span style="color:#f92672">.</span><span style="color:#a6e22e">setJpaProperties</span><span style="color:#f92672">(</span>properties<span style="color:#f92672">);</span>
+        emf<span style="color:#f92672">.</span><span style="color:#a6e22e">setPersistenceUnitName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;h2Persistence&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> emf<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Bean</span>
+    <span style="color:#66d9ef">public</span> PlatformTransactionManager <span style="color:#a6e22e">h2DSTransactionManager</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Qualifier</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;h2DSEmFactory&#34;</span><span style="color:#f92672">)</span> EntityManagerFactory h2DSEmFactory<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> JpaTransactionManager<span style="color:#f92672">(</span>h2DSEmFactory<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span></code></pre></div>
+<p>Dla porządku jeszcze sam początek</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@SpringBootApplication</span>
+<span style="color:#a6e22e">@EnableAutoConfiguration</span><span style="color:#f92672">(</span>exclude <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>DataSourceAutoConfiguration<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">})</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MultidsApplication</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        SpringApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span>MultidsApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>W którym najważniejsza jest druga linia:
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
+Czyli wyłączenie autokonfiguracji źródła danych</p>
+
+<p>I na koniec plik konfiguracji <strong>application.yml</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-YAML" data-lang="YAML">spring.datasource.initialization-mode: never
+hsqldb:
+  datasource:
+    url: jdbc:hsqldb:mem:testdb
+    username: sa
+    password:
+    properties-hibernate-dialect: org.hibernate.dialect.HSQLDialect
+    hibernate-hbm2ddl-auto: create-drop
+
+h2:
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+    properties-hibernate-dialect:  org.hibernate.dialect.H2Dialect
+    hibernate-hbm2ddl-auto: create-drop</code></pre></div>
+<p>Całość znajdziecie tu:</p>
+
+<p><a href="https://github.com/Grzegorz-Zarnowiecki/multids">https://github.com/Grzegorz-Zarnowiecki/multids</a></p> </div>
+    <footer class="post-footer">
+
+  <div class="post-footer-data">
+    
+<div class="tags">
+    
+      <div class="tag">
+        <a href="https://grzegorz-zarnowiecki.github.io/tags/java">#java</a>
+      </div>
+    
+      <div class="tag">
+        <a href="https://grzegorz-zarnowiecki.github.io/tags/spring">#spring</a>
+      </div>
+    
+</div>
+
+    <div class="date"> Oct 27, 2018 </div>
+  </div>
+
+</footer>
+
+
+  
+
+
+</article>
+
+  <footer>
+
+  <div class="social-links-footer">
+
+  
+  <a href="mailto:g.zarnowiecki%28at%29gmail.com"><div class="social-link">Email</div></a>
+  
+
+  
+  <a href="https://github.com/Grzegorz-Zarnowiecki" target="_blank"><div class="social-link">GitHub</div></a>
+  
+
+  
+
+  
+
+  
+  <a href="https://www.linkedin.com/in/grzegorz-zarnowiecki-b1809740" target="_blank"><div class="social-link">LinkedIn</div></a>
+  
+
+  <div class="social-link">
+  <a href="https://grzegorz-zarnowiecki.github.io/index.xml" target="_blank">RSS</a>
+  </div>
+
+</div>
+
+
+  <div class="copyright">  </div>
+
+  <div class="poweredby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>.
+  </div>
+
+  </footer>
+
+</div> 
+
+</body>
+</html>
+
