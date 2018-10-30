@@ -5,9 +5,9 @@
     <link>https://grzegorz-zarnowiecki.github.io/categories/</link>
     <description>Recent content in Categories on Grzegorz Żarnowiecki - simple blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>PL-pl</language>
     
-	<atom:link href="https://grzegorz-zarnowiecki.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://grzegorz-zarnowiecki.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>

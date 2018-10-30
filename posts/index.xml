@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Grzegorz Żarnowiecki - simple blog</title>
-    <link>https://grzegorz-zarnowiecki.github.io/</link>
-    <description>Recent content on Grzegorz Żarnowiecki - simple blog</description>
+    <title>Posts on Grzegorz Żarnowiecki - simple blog</title>
+    <link>https://grzegorz-zarnowiecki.github.io/posts/</link>
+    <description>Recent content in Posts on Grzegorz Żarnowiecki - simple blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>PL-pl</language>
     <lastBuildDate>Sat, 27 Oct 2018 18:28:21 +0200</lastBuildDate>
     
-        <atom:link href="https://grzegorz-zarnowiecki.github.io/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://grzegorz-zarnowiecki.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>

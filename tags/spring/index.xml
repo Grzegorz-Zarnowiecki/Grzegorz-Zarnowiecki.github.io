@@ -5,22 +5,156 @@
     <link>https://grzegorz-zarnowiecki.github.io/tags/spring/</link>
     <description>Recent content in Spring on Grzegorz Żarnowiecki - simple blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>PL-pl</language>
     <lastBuildDate>Sat, 27 Oct 2018 18:28:21 +0200</lastBuildDate>
     
-	<atom:link href="https://grzegorz-zarnowiecki.github.io/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://grzegorz-zarnowiecki.github.io/tags/spring/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Spring Boot V2 and Multiple Datasorces</title>
-      <link>https://grzegorz-zarnowiecki.github.io/post/spring-boot-v2-and-multiple-datasorces/</link>
+      <title>Spring Boot V2 i wiele źródeł danych (multiple datasources)</title>
+      <link>https://grzegorz-zarnowiecki.github.io/posts/spring-boot-v2-and-multiple-datasorces/</link>
       <pubDate>Sat, 27 Oct 2018 18:28:21 +0200</pubDate>
       
-      <guid>https://grzegorz-zarnowiecki.github.io/post/spring-boot-v2-and-multiple-datasorces/</guid>
-      <description>&lt;p&gt;Hello&lt;/p&gt;
+      <guid>https://grzegorz-zarnowiecki.github.io/posts/spring-boot-v2-and-multiple-datasorces/</guid>
+      <description>&lt;p&gt;Cześć&lt;/p&gt;
 
-&lt;p&gt;Finally i just read documentation and somme blogs, after merging proces I wrtite this code&amp;hellip;:
-&lt;/p&gt;</description>
+&lt;p&gt;Tak wiem że w sieci jest 500 stron opisujących to zagadnienie ale gdy usiadłem do czytania na wielu było coś nie tak, głównie kwestie rozwoju Spring Boot i użycie nie wspieranych już metod konfiguracji. Zatem wszystko w komplecie macie tu:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Konfiguracja jest prosta do bólu, każde datasource ma swój pakiet dla wygody i porządku czyli&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-jade&#34; data-lang=&#34;jade&#34;&gt;net.gzarnowiecki.multids
+			NazwaŹródła(H2)
+						Domain
+								Encje
+						Repository
+								Repozytoria
+						...
+			NazwaŹródła2(HSQLDB)
+						....&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Kod pierwszego źródła&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#a2f&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span style=&#34;color:#a2f&#34;&gt;@EnableTransactionManagement&lt;/span&gt;
+&lt;span style=&#34;color:#a2f&#34;&gt;@EnableJpaRepositories&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;basePackages &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;net.gzarnowiecki.multids.HSQLDB.repository&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; entityManagerFactoryRef &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hsqldbDSEmFactory&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; transactionManagerRef &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hsqldbDSTransactionManager&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#a2f&#34;&gt;@PropertySource&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;classpath:application.yml&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#a2f&#34;&gt;@ConfigurationProperties&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hsqldb.datasource&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;HsqlDbConfiguration&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Value&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;${hsqldb.datasource.hibernate-hbm2ddl-auto}&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;private&lt;/span&gt; String hbm2ddl&lt;span style=&#34;color:#666&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Value&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;${hsqldb.datasource.properties-hibernate-dialect}&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;private&lt;/span&gt; String hibernateDialect&lt;span style=&#34;color:#666&#34;&gt;;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Bean&lt;/span&gt;
+
+
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#a2f&#34;&gt;@Qualifier&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hsqldb.datasource&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+    DataSourceProperties &lt;span style=&#34;color:#00f&#34;&gt;hsqldbDSProperties&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;new&lt;/span&gt; DataSourceProperties&lt;span style=&#34;color:#666&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Primary&lt;/span&gt;
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; DataSource &lt;span style=&#34;color:#00f&#34;&gt;hsqldbDS&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#a2f&#34;&gt;@Qualifier&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hsqldbDSProperties&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; DataSourceProperties hsqldbDSProperties&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; hsqldbDSProperties&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;initializeDataSourceBuilder&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;build&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Primary&lt;/span&gt;
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; LocalContainerEntityManagerFactoryBean &lt;span style=&#34;color:#00f&#34;&gt;hsqldbDSEmFactory&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#a2f&#34;&gt;@Qualifier&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hsqldbDS&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; DataSource hsqldbDS&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; EntityManagerFactoryBuilder builder&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+        Properties properties &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;new&lt;/span&gt; Properties&lt;span style=&#34;color:#666&#34;&gt;();&lt;/span&gt;
+        properties&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;setProperty&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hibernate.dialect&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; hibernateDialect&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+        properties&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;setProperty&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hibernate.hbm2ddl.auto&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; hbm2ddl&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+        LocalContainerEntityManagerFactoryBean emf &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; builder&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;dataSource&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;hsqldbDS&lt;span style=&#34;color:#666&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;packages&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;net.gzarnowiecki.multids.hsqldb.domain&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;build&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;();&lt;/span&gt;
+        emf&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;setJpaProperties&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;properties&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+        emf&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;setPersistenceUnitName&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hsqldbPersistence&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; emf&lt;span style=&#34;color:#666&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Primary&lt;/span&gt;
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; PlatformTransactionManager &lt;span style=&#34;color:#00f&#34;&gt;hsqldbDSTransactionManager&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#a2f&#34;&gt;@Qualifier&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hsqldbDSEmFactory&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; EntityManagerFactory hsqldbDSEmFactory&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;new&lt;/span&gt; JpaTransactionManager&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;hsqldbDSEmFactory&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;i poniżej drugiego, jest analogiczny, adnotacja @Primary jest wymagana dla jednego źródła&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#a2f&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span style=&#34;color:#a2f&#34;&gt;@EnableTransactionManagement&lt;/span&gt;
+&lt;span style=&#34;color:#a2f&#34;&gt;@EnableJpaRepositories&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;basePackages &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;net.gzarnowiecki.multids.H2.repository&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; entityManagerFactoryRef &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;h2DSEmFactory&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; transactionManagerRef &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;h2DSTransactionManager&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+
+&lt;span style=&#34;color:#a2f&#34;&gt;@PropertySource&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;classpath:application.yml&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;H2DbConfiguration&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Value&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;${h2.datasource.hibernate-hbm2ddl-auto}&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;private&lt;/span&gt; String hbm2ddl&lt;span style=&#34;color:#666&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Value&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;${h2.datasource.properties-hibernate-dialect}&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;private&lt;/span&gt; String hibernateDialect&lt;span style=&#34;color:#666&#34;&gt;;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#a2f&#34;&gt;@ConfigurationProperties&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;h2.datasource&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#a2f&#34;&gt;@Qualifier&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;h2.datasource&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt;
+    DataSourceProperties &lt;span style=&#34;color:#00f&#34;&gt;h2DSProperties&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;new&lt;/span&gt; DataSourceProperties&lt;span style=&#34;color:#666&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;
+
+
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; DataSource &lt;span style=&#34;color:#00f&#34;&gt;h2DS&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#a2f&#34;&gt;@Qualifier&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;h2DSProperties&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; DataSourceProperties h2DSProperties&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; h2DSProperties&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;initializeDataSourceBuilder&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;build&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; LocalContainerEntityManagerFactoryBean &lt;span style=&#34;color:#00f&#34;&gt;h2DSEmFactory&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#a2f&#34;&gt;@Qualifier&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;h2DS&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; DataSource h2DS&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; EntityManagerFactoryBuilder builder&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+        Properties properties &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;new&lt;/span&gt; Properties&lt;span style=&#34;color:#666&#34;&gt;();&lt;/span&gt;
+        properties&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;setProperty&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hibernate.dialect&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; hibernateDialect&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+        properties&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;setProperty&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;hibernate.hbm2ddl.auto&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; hbm2ddl&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+        LocalContainerEntityManagerFactoryBean emf &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; builder&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;dataSource&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;h2DS&lt;span style=&#34;color:#666&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;packages&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;net.gzarnowiecki.multids.H2.domain&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;build&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;();&lt;/span&gt;
+        emf&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;setJpaProperties&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;properties&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+        emf&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;setPersistenceUnitName&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;h2Persistence&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; emf&lt;span style=&#34;color:#666&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#a2f&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; PlatformTransactionManager &lt;span style=&#34;color:#00f&#34;&gt;h2DSTransactionManager&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#a2f&#34;&gt;@Qualifier&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;h2DSEmFactory&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; EntityManagerFactory h2DSEmFactory&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;new&lt;/span&gt; JpaTransactionManager&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;h2DSEmFactory&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Dla porządku jeszcze sam początek&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#a2f&#34;&gt;@SpringBootApplication&lt;/span&gt;
+&lt;span style=&#34;color:#a2f&#34;&gt;@EnableAutoConfiguration&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;exclude &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;DataSourceAutoConfiguration&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;})&lt;/span&gt;
+&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;MultidsApplication&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#666&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#666&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;{&lt;/span&gt;
+        SpringApplication&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;run&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;(&lt;/span&gt;MultidsApplication&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#7d9029&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;,&lt;/span&gt; args&lt;span style=&#34;color:#666&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#666&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;W którym najważniejsza jest druga linia:
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
+Czyli wyłączenie autokonfiguracji źródła danych&lt;/p&gt;
+
+&lt;p&gt;I na koniec plik konfiguracji &lt;strong&gt;application.yml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-YAML&#34; data-lang=&#34;YAML&#34;&gt;spring.datasource.initialization-mode:&lt;span style=&#34;color:#bbb&#34;&gt; &lt;/span&gt;never&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;&lt;/span&gt;hsqldb:&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;  &lt;/span&gt;datasource:&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;url:&lt;span style=&#34;color:#bbb&#34;&gt; &lt;/span&gt;jdbc:hsqldb:mem:testdb&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;username:&lt;span style=&#34;color:#bbb&#34;&gt; &lt;/span&gt;sa&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;password:&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;properties-hibernate-dialect:&lt;span style=&#34;color:#bbb&#34;&gt; &lt;/span&gt;org.hibernate.dialect.HSQLDialect&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;hibernate-hbm2ddl-auto:&lt;span style=&#34;color:#bbb&#34;&gt; &lt;/span&gt;create-drop&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;&lt;/span&gt;h2:&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;  &lt;/span&gt;datasource:&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;url:&lt;span style=&#34;color:#bbb&#34;&gt; &lt;/span&gt;jdbc:h2:mem:mydb&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;username:&lt;span style=&#34;color:#bbb&#34;&gt; &lt;/span&gt;sa&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;password:&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;driverClassName:&lt;span style=&#34;color:#bbb&#34;&gt; &lt;/span&gt;org.h2.Driver&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;properties-hibernate-dialect:&lt;span style=&#34;color:#bbb&#34;&gt;  &lt;/span&gt;org.hibernate.dialect.H2Dialect&lt;span style=&#34;color:#bbb&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#bbb&#34;&gt;    &lt;/span&gt;hibernate-hbm2ddl-auto:&lt;span style=&#34;color:#bbb&#34;&gt; &lt;/span&gt;create-drop&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Całość znajdziecie tu:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/Grzegorz-Zarnowiecki/multids&#34;&gt;https://github.com/Grzegorz-Zarnowiecki/multids&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>

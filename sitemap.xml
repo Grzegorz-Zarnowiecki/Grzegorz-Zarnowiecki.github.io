@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://grzegorz-zarnowiecki.github.io/post/spring-boot-v2-and-multiple-datasorces/</loc>
+    <loc>https://grzegorz-zarnowiecki.github.io/posts/spring-boot-v2-and-multiple-datasorces/</loc>
     <lastmod>2018-10-27T18:28:21+02:00</lastmod>
   </url>
   
@@ -25,7 +25,7 @@
   </url>
   
   <url>
-    <loc>https://grzegorz-zarnowiecki.github.io/post/</loc>
+    <loc>https://grzegorz-zarnowiecki.github.io/posts/</loc>
     <lastmod>2018-10-27T18:28:21+02:00</lastmod>
     <priority>0</priority>
   </url>
