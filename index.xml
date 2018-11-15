@@ -17,31 +17,43 @@
       <pubDate>Thu, 15 Nov 2018 15:09:42 +0100</pubDate>
       
       <guid>https://grzegorz-zarnowiecki.github.io/posts/run_eclipse_with_custom_jdk/</guid>
-      <description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://matsim.org/docs/devguide/eclipse/jdk&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
 
-&lt;h1 id=&#34;run-eclipse-or-spring-tool-with-custom-jdk&#34;&gt;Run Eclipse or Spring Tool with custom JDK&lt;/h1&gt;
+&lt;p&gt;To check with what Java version (JRE or JDK) Eclipse is running, do the following:&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&#34;https://matsim.org/docs/devguide/eclipse/jdk&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Open the menu item &lt;code&gt;Help &amp;gt; About Eclipse&lt;/code&gt;. (On the Mac, it’s in the Eclipse-menu, not the Help-menu)&lt;/li&gt;
+&lt;li&gt;Click on &lt;code&gt;Installation Details&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Switch to the tab &lt;code&gt;Configuration&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Search for a line that starts with &lt;code&gt;-vm&lt;/code&gt;. The line following it shows which Java binary is used.
 
-&lt;p&gt;Maven requires Eclipse using a JDK, i.e. Java Development Kit, instead of a Java Runtime Environment (JRE). The main difference is that a JDK also contains a Java Compiler and other tools to develop Java Code, while the JRE is only able to run compiled Java applications.&lt;/p&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;To check with what Java version (JRE or JDK) Eclipse is running, do the following:
-* Open the menu item &lt;code&gt;Help &amp;gt; About Eclipse&lt;/code&gt;. (On the Mac, it’s in the Eclipse-menu, not the Help-menu)
-* Click on &lt;code&gt;Installation Details&lt;/code&gt;.
-* Switch to the tab &lt;code&gt;Configuration&lt;/code&gt;
-* Search for a line that starts with &lt;code&gt;-vm&lt;/code&gt;. The line following it shows which Java binary is used.
-  Depending on the name and location of the used Java binary one can figure out if a JRE or a JDK is used:
-* If the path contains “jre” (e.g. as in &lt;code&gt;C:\Program Files\Java\jre6\bin\client\jvm.dll)&lt;/code&gt; it is a JRE
-* If the path contains “jdk” (e.g. as in &lt;code&gt;C:\Program Files\Java\jdk1.6.0_31\bin\javaw.exe)&lt;/code&gt; it is a JDK.
-  If no JDK is used for Eclipse, change it:
-* Quit Eclipse if it is running
-* Go to the Eclipse installation directory and open the file eclipse.ini in a text editor.
-* Search for the line &lt;code&gt;-vmargs&lt;/code&gt;
-* Before the line &lt;code&gt;-vmargs&lt;/code&gt;, add two lines:&lt;/p&gt;
+&lt;p&gt;Depending on the name and location of the used Java binary one can figure out if a JRE or a JDK is used:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If the path contains “jre” (e.g. as in &lt;code&gt;C:\Program Files\Java\jre6\bin\client\jvm.dll&lt;/code&gt;) it is a JRE&lt;/li&gt;
+&lt;li&gt;If the path contains “jdk” (e.g. as in &lt;code&gt;C:\Program Files\Java\jdk1.6.0_31\bin\javaw.exe&lt;/code&gt;) it is a JDK.
+
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If no JDK is used for Eclipse, change it:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Quit Eclipse if it is running&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Go to the Eclipse installation directory and open the file &lt;code&gt;eclipse.ini&lt;/code&gt; in a text editor.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Search for the line &lt;code&gt;-vmargs&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Before the line &lt;code&gt;-vmargs&lt;/code&gt;, add two lines:&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;On the first line, write &lt;code&gt;-vm&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;On the second line, write the path to your JDK installation (usually something like: &lt;code&gt;C:\Program Files\Java\jdk1.6.0_31\bin\javaw.exe&lt;/code&gt; on Windows)&lt;/p&gt;
+&lt;p&gt;On the second line, write the path to your JDK installation (usually something  like: &lt;code&gt;C:\Program Files\Java\jdk1.6.0_31\bin\javaw.exe&lt;/code&gt; on Windows)&lt;/p&gt;
 </description>
     </item>
     
