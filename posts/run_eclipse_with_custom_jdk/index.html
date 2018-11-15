@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Run Eclipse or Spring Tool with custom JDK</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="Run Eclipse or Spring Tool with custom JDK">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="Run Eclipse or Spring Tool with custom JDK">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://grzegorz-zarnowiecki.github.io/posts/run_eclipse_with_custom_jdk/">
+	<meta name="og:site_name" content="Run Eclipse or Spring Tool with custom JDK">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="">
+	<link rel="stylesheet" type="text/css" href="https://grzegorz-zarnowiecki.github.io/css/style.css">
+	
+	
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-128183679-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://grzegorz-zarnowiecki.github.io/" style="float: left;color:#ff3b30;">Grzegorz Żarnowiecki - simple blog</a>
+	
+	
+	
+	<a href="https://grzegorz-zarnowiecki.github.io/posts/index.xml" style="color:#777;float: right;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+</header>
+
+
+<div class="content">
+  <h1>Run Eclipse or Spring Tool with custom JDK</h1>
+  <aside></aside>
+  <p>
+
+<h1 id="run-eclipse-with-a-jdk">Run Eclipse with a JDK</h1>
+
+<p><a href="https://matsim.org/docs/devguide/eclipse/jdk">Source</a></p>
+
+<p>Maven requires Eclipse using a JDK, i.e. Java Development Kit, instead of a Java Runtime Environment (JRE). The main difference is that a JDK also contains a Java Compiler and other tools to develop Java Code, while the JRE is only able to run compiled Java applications.</p>
+
+<p>To check with what Java version (JRE or JDK) Eclipse is running, do the following:
+* Open the menu item <code>Help &gt; About Eclipse</code>. (On the Mac, it’s in the Eclipse-menu, not the Help-menu)
+* Click on <code>Installation Details</code>.
+* Switch to the tab <code>Configuration</code>
+* Search for a line that starts with <code>-vm</code>. The line following it shows which Java binary is used.
+  Depending on the name and location of the used Java binary one can figure out if a JRE or a JDK is used:
+* If the path contains “jre” (e.g. as in <code>C:\Program Files\Java\jre6\bin\client\jvm.dll)</code> it is a JRE
+* If the path contains “jdk” (e.g. as in <code>C:\Program Files\Java\jdk1.6.0_31\bin\javaw.exe)</code> it is a JDK.
+  If no JDK is used for Eclipse, change it:
+* Quit Eclipse if it is running
+* Go to the Eclipse installation directory and open the file eclipse.ini in a text editor.
+* Search for the line <code>-vmargs</code>
+* Before the line <code>-vmargs</code>, add two lines:</p>
+
+<p>On the first line, write <code>-vm</code></p>
+
+<p>On the second line, write the path to your JDK installation (usually something like: <code>C:\Program Files\Java\jdk1.6.0_31\bin\javaw.exe</code> on Windows)</p>
+</p>
+</div>
+
+
+  <p>Written on Nov 15, 2018.</p>
+
+
+<footer>
+	<p>&copy; 2018 All rights reserved.</p>
+</footer>
+</body>
+</html>
